@@ -1,4 +1,3 @@
-// src/pages/Career.jsx
 import React, { useState, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
@@ -73,18 +72,14 @@ const Career = () => {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
       newErrors.email = "Enter a valid email address";
     }
-    if (!form.resume) {
-      newErrors.resume = "Please upload your resume";
-    }
+    if (!form.resume) newErrors.resume = "Please upload your resume";
     return newErrors;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleFileChange = (file) => {
@@ -119,11 +114,8 @@ const Career = () => {
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
+    if (e.type === "dragenter" || e.type === "dragover") setDragActive(true);
+    else if (e.type === "dragleave") setDragActive(false);
   };
 
   const handleDrop = (e) => {
@@ -140,9 +132,6 @@ const Career = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // ═══════════════════════════════════════════════════
-  // 🚀 FORMSPREE SUBMIT — PDF DIRECTLY ATTACH HOGA!
-  // ═══════════════════════════════════════════════════
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError("");
@@ -157,15 +146,11 @@ const Career = () => {
 
     try {
       const formData = new FormData();
-
       formData.append("name", form.name);
       formData.append("email", form.email);
       formData.append("phone", form.phone);
       formData.append("location", form.location);
-
-      if (form.resume) {
-        formData.append("resume", form.resume);
-      }
+      if (form.resume) formData.append("resume", form.resume);
 
       const response = await fetch(
         "http://localhost/career-api/career-api/career.php",
@@ -180,11 +165,8 @@ const Career = () => {
       if (response.ok) {
         setSubmitted(true);
       } else {
-        setSubmitError(
-          result?.error || "Something went wrong. Please try again."
-        );
+        setSubmitError(result?.error || "Something went wrong. Please try again.");
       }
-
     } catch (error) {
       console.error("Submit error:", error);
       setSubmitError("Network error. Try again.");
@@ -210,57 +192,64 @@ const Career = () => {
   if (submitted) {
     return (
       <main className="bg-neutral-950">
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden py-16 lg:py-24">
-          <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_40%,rgba(249,115,22,0.15),transparent_55%)]" />
-          <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-950" />
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.055]"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px)",
-              backgroundSize: "72px 72px",
-            }}
-          />
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative mx-auto max-w-lg px-6 text-center"
-          >
-            <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-green-500/15 ring-1 ring-green-500/30">
-              <CheckCircle2 className="h-10 w-10 text-green-400" />
-            </div>
-            <h2 className="text-3xl font-black text-white md:text-4xl">
-              Application{" "}
-              <span className="bg-gradient-to-r from-orange-300 via-orange-400 to-orange-600 bg-clip-text text-transparent">
-                Submitted!
-              </span>
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-neutral-300">
-              Thank you for your interest in joining our team. We've
-              received your application along with your resume. Our HR
-              team will reach out to you if your profile matches our
-              requirements.
-            </p>
-            <button
-              onClick={() => {
-                setSubmitted(false);
-                setForm({
-                  name: "",
-                  location: "",
-                  phone: "",
-                  email: "",
-                  resume: null,
-                });
-                setSubmitError("");
+        <section
+          // ✅ GAP FIX like About/Hero
+          className="relative -mt-24 scroll-mt-24 overflow-hidden pt-24 pb-16 lg:pb-24"
+        >
+          <div className="relative flex min-h-[calc(100svh-6rem)] items-center justify-center">
+            <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_50%_40%,rgba(249,115,22,0.15),transparent_55%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-950" />
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.055]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(255,255,255,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.14) 1px, transparent 1px)",
+                backgroundSize: "72px 72px",
               }}
-              className="group mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:brightness-110"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="relative mx-auto max-w-lg px-6 text-center"
             >
-              Submit Another Application
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
-            </button>
-          </motion.div>
+              <div className="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-full bg-green-500/15 ring-1 ring-green-500/30">
+                <CheckCircle2 className="h-10 w-10 text-green-400" />
+              </div>
+
+              <h2 className="text-3xl font-black text-white md:text-4xl">
+                Application{" "}
+                <span className="bg-gradient-to-r from-orange-300 via-orange-400 to-orange-600 bg-clip-text text-transparent">
+                  Submitted!
+                </span>
+              </h2>
+
+              <p className="mt-4 text-base leading-relaxed text-neutral-300">
+                Thank you for your interest in joining our team. We've received
+                your application along with your resume. Our HR team will reach
+                out to you if your profile matches our requirements.
+              </p>
+
+              <button
+                onClick={() => {
+                  setSubmitted(false);
+                  setForm({
+                    name: "",
+                    location: "",
+                    phone: "",
+                    email: "",
+                    resume: null,
+                  });
+                  setSubmitError("");
+                }}
+                className="group mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:brightness-110"
+              >
+                Submit Another Application
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              </button>
+            </motion.div>
+          </div>
         </section>
       </main>
     );
@@ -268,7 +257,10 @@ const Career = () => {
 
   return (
     <main className="bg-neutral-950">
-      <section className="relative overflow-hidden py-16 lg:py-24">
+      <section
+        // ✅ GAP FIX like About/Hero
+        className="relative -mt-24 scroll-mt-24 overflow-hidden pt-24 pb-16 lg:pb-24"
+      >
         <div className="absolute inset-0 bg-[radial-gradient(1100px_circle_at_15%_10%,rgba(249,115,22,0.18),transparent_55%),radial-gradient(900px_circle_at_90%_85%,rgba(249,115,22,0.10),transparent_60%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-950 to-neutral-950" />
 
@@ -313,10 +305,9 @@ const Career = () => {
               variants={reduceMotion ? undefined : item}
               className="mt-4 text-base leading-relaxed text-neutral-300 md:text-lg"
             >
-              We're looking for dedicated professionals who share our
-              commitment to quality and excellence. Submit your
-              application below and take the first step toward a
-              rewarding career.
+              We're looking for dedicated professionals who share our commitment
+              to quality and excellence. Submit your application below and take
+              the first step toward a rewarding career.
             </motion.p>
           </motion.div>
 
@@ -346,9 +337,9 @@ const Career = () => {
                     </h2>
                   </div>
                   <p className="mt-4 text-sm leading-relaxed text-neutral-300">
-                    Be part of a team that's shaping the future of
-                    refractory manufacturing in India. We value expertise,
-                    dedication, and a drive for continuous improvement.
+                    Be part of a team that's shaping the future of refractory
+                    manufacturing in India. We value expertise, dedication, and a
+                    drive for continuous improvement.
                   </p>
                   <ul className="mt-5 space-y-3">
                     {benefits.map((b, i) => (
@@ -356,9 +347,7 @@ const Career = () => {
                         <div className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-500/15 ring-1 ring-orange-500/25">
                           <CheckCircle2 className="h-3.5 w-3.5 text-orange-400" />
                         </div>
-                        <span className="text-sm text-neutral-200">
-                          {b}
-                        </span>
+                        <span className="text-sm text-neutral-200">{b}</span>
                       </li>
                     ))}
                   </ul>
@@ -388,15 +377,14 @@ const Career = () => {
                       <span className="font-semibold text-orange-300">
                         Details:
                       </span>{" "}
-                      Ensure your contact information is accurate so we
-                      can reach you.
+                      Ensure your contact information is accurate so we can reach
+                      you.
                     </p>
                     <p>
                       <span className="font-semibold text-orange-300">
                         Response Time:
                       </span>{" "}
-                      We typically review applications within 5–7 business
-                      days.
+                      We typically review applications within 5–7 business days.
                     </p>
                   </div>
                 </div>
@@ -422,8 +410,7 @@ const Career = () => {
                       Apply Now
                     </h2>
                     <p className="mt-1.5 text-sm text-neutral-400">
-                      Fill in your details and upload your resume to get
-                      started.
+                      Fill in your details and upload your resume to get started.
                     </p>
                   </div>
 
@@ -446,8 +433,7 @@ const Career = () => {
                       className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-200"
                     >
                       <User className="h-4 w-4 text-orange-400" />
-                      Full Name{" "}
-                      <span className="text-orange-500">*</span>
+                      Full Name <span className="text-orange-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -456,10 +442,11 @@ const Career = () => {
                       value={form.name}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${errors.name
+                      className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${
+                        errors.name
                           ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
                           : "border-white/10 focus:border-orange-500/50 focus:ring-orange-500/20"
-                        }`}
+                      }`}
                     />
                     {errors.name && (
                       <motion.p
@@ -480,8 +467,7 @@ const Career = () => {
                       className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-200"
                     >
                       <MapPin className="h-4 w-4 text-orange-400" />
-                      Location{" "}
-                      <span className="text-orange-500">*</span>
+                      Location <span className="text-orange-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -490,10 +476,11 @@ const Career = () => {
                       value={form.location}
                       onChange={handleChange}
                       placeholder="City, State"
-                      className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${errors.location
+                      className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${
+                        errors.location
                           ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
                           : "border-white/10 focus:border-orange-500/50 focus:ring-orange-500/20"
-                        }`}
+                      }`}
                     />
                     {errors.location && (
                       <motion.p
@@ -515,8 +502,7 @@ const Career = () => {
                         className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-200"
                       >
                         <Phone className="h-4 w-4 text-orange-400" />
-                        Phone Number{" "}
-                        <span className="text-orange-500">*</span>
+                        Phone Number <span className="text-orange-500">*</span>
                       </label>
                       <input
                         type="tel"
@@ -525,10 +511,11 @@ const Career = () => {
                         value={form.phone}
                         onChange={handleChange}
                         placeholder="+91 98765 43210"
-                        className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${errors.phone
+                        className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${
+                          errors.phone
                             ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
                             : "border-white/10 focus:border-orange-500/50 focus:ring-orange-500/20"
-                          }`}
+                        }`}
                       />
                       {errors.phone && (
                         <motion.p
@@ -548,8 +535,7 @@ const Career = () => {
                         className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-200"
                       >
                         <Mail className="h-4 w-4 text-orange-400" />
-                        Email{" "}
-                        <span className="text-orange-500">*</span>
+                        Email <span className="text-orange-500">*</span>
                       </label>
                       <input
                         type="email"
@@ -558,10 +544,11 @@ const Career = () => {
                         value={form.email}
                         onChange={handleChange}
                         placeholder="you@example.com"
-                        className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${errors.email
+                        className={`w-full rounded-xl border bg-white/5 px-4 py-3 text-sm text-white placeholder-neutral-500 outline-none backdrop-blur transition-all duration-200 focus:ring-2 ${
+                          errors.email
                             ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/20"
                             : "border-white/10 focus:border-orange-500/50 focus:ring-orange-500/20"
-                          }`}
+                        }`}
                       />
                       {errors.email && (
                         <motion.p
@@ -580,8 +567,7 @@ const Career = () => {
                   <div>
                     <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-neutral-200">
                       <FileUp className="h-4 w-4 text-orange-400" />
-                      Upload Resume{" "}
-                      <span className="text-orange-500">*</span>
+                      Upload Resume <span className="text-orange-500">*</span>
                     </label>
 
                     {!form.resume ? (
@@ -591,21 +577,24 @@ const Career = () => {
                         onDragOver={handleDrag}
                         onDrop={handleDrop}
                         onClick={() => fileInputRef.current?.click()}
-                        className={`group cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 ${dragActive
+                        className={`group cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all duration-200 ${
+                          dragActive
                             ? "border-orange-500/60 bg-orange-500/10"
                             : errors.resume
-                              ? "border-red-500/40 bg-red-500/5 hover:border-red-500/60"
-                              : "border-white/15 bg-white/[0.02] hover:border-orange-500/40 hover:bg-white/5"
-                          }`}
+                            ? "border-red-500/40 bg-red-500/5 hover:border-red-500/60"
+                            : "border-white/15 bg-white/[0.02] hover:border-orange-500/40 hover:bg-white/5"
+                        }`}
                       >
                         <div
-                          className={`mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full transition-colors ${dragActive
+                          className={`mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full transition-colors ${
+                            dragActive
                               ? "bg-orange-500/20 text-orange-300"
                               : "bg-white/10 text-neutral-400 group-hover:bg-orange-500/15 group-hover:text-orange-300"
-                            }`}
+                          }`}
                         >
                           <Upload className="h-5 w-5" />
                         </div>
+
                         <p className="text-sm font-semibold text-neutral-300">
                           {dragActive ? (
                             <span className="text-orange-300">
@@ -620,16 +609,16 @@ const Career = () => {
                             </>
                           )}
                         </p>
+
                         <p className="mt-1 text-xs text-neutral-500">
                           PDF, DOC, DOCX — Max 5MB
                         </p>
+
                         <input
                           ref={fileInputRef}
                           type="file"
                           accept=".pdf,.doc,.docx"
-                          onChange={(e) =>
-                            handleFileChange(e.target.files?.[0])
-                          }
+                          onChange={(e) => handleFileChange(e.target.files?.[0])}
                           className="hidden"
                         />
                       </div>
@@ -642,6 +631,7 @@ const Career = () => {
                         <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-green-500/15 text-green-400">
                           <CheckCircle2 className="h-5 w-5" />
                         </div>
+
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold text-white">
                             {form.resume.name}
@@ -650,6 +640,7 @@ const Career = () => {
                             {formatFileSize(form.resume.size)}
                           </p>
                         </div>
+
                         <button
                           type="button"
                           onClick={removeFile}
@@ -682,11 +673,7 @@ const Career = () => {
                   >
                     {isSubmitting ? (
                       <>
-                        <svg
-                          className="h-4 w-4 animate-spin"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
+                        <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                           <circle
                             cx="12"
                             cy="12"
@@ -715,8 +702,7 @@ const Career = () => {
                   </button>
 
                   <p className="text-center text-xs text-neutral-500">
-                    By submitting, you agree that your information will be
-                    used for recruitment purposes only.
+                    By submitting, you agree that your information will be used for recruitment purposes only.
                   </p>
                 </div>
               </form>

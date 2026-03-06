@@ -1,5 +1,5 @@
 // src/Components/Footer/Footer.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Mail,
@@ -9,6 +9,7 @@ import {
   Instagram,
   MessageCircle,
   ArrowUpRight,
+  ChevronUp, // ✅ scroll-to-top icon
 } from "lucide-react";
 import logo from "../Img/logo.png";
 
@@ -38,8 +39,35 @@ const Footer = () => {
     { label: "Contact", to: "/contact" },
   ];
 
+  // ✅ Scroll-to-top button show/hide
+  const [showTop, setShowTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 400);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToTop = () =>
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
     <footer className="relative bg-neutral-950 text-neutral-300">
+      {/* ✅ Scroll To Top Floating Button (inside footer file) */}
+      {showTop && (
+        <button
+          type="button"
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          className="fixed bottom-6 right-6 z-[9999] grid h-11 w-11 place-items-center rounded-full
+               bg-orange-500 text-white shadow-lg transition
+               hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400/60"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </button>
+      )}
+
       {/* Top line */}
       <div className="h-px w-full bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
 
@@ -63,6 +91,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
+
             <p className="mt-3 text-sm leading-relaxed text-neutral-500">
               Specialized manufacturer of silica ramming mass for induction
               furnace applications in steel & foundry sectors.
@@ -74,6 +103,7 @@ const Footer = () => {
                 href={SOCIAL.linkedin}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="LinkedIn"
                 className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 bg-white/5 text-neutral-400 transition hover:border-orange-500/30 hover:bg-orange-500/10 hover:text-orange-400"
               >
                 <Linkedin className="h-4 w-4" />
@@ -82,16 +112,19 @@ const Footer = () => {
                 href={SOCIAL.instagram}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Instagram"
                 className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 bg-white/5 text-neutral-400 transition hover:border-orange-500/30 hover:bg-orange-500/10 hover:text-orange-400"
               >
                 <Instagram className="h-4 w-4" />
               </a>
-              {WHATSAPP_NUMBERS.map((n, i) => (
+
+              {WHATSAPP_NUMBERS.map((n) => (
                 <a
                   key={n}
                   href={waLink(n)}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="WhatsApp"
                   className="grid h-9 w-9 place-items-center rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 transition hover:bg-emerald-500/20"
                 >
                   <MessageCircle className="h-4 w-4" />
@@ -132,6 +165,7 @@ const Footer = () => {
                 <Mail className="h-4 w-4 text-orange-500/70" />
                 {EMAIL}
               </a>
+
               {PHONES.map((p) => (
                 <a
                   key={p}
@@ -161,6 +195,7 @@ const Footer = () => {
                   <div>Gerwani, Raigarh, Chhattisgarh</div>
                 </div>
               </div>
+
               <div className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-orange-500/70" />
                 <div>
@@ -183,7 +218,6 @@ const Footer = () => {
             © {year} SSGT Group. All rights reserved.
           </div>
 
-          {/* Designed By — Centered & Styled */}
           <div className="flex items-center justify-center gap-2">
             <div className="h-px w-8 bg-gradient-to-r from-transparent to-orange-500/40" />
             <span className="text-xs font-medium tracking-wide text-neutral-500">
@@ -194,7 +228,7 @@ const Footer = () => {
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 font-bold text-orange-400 transition hover:text-orange-300"
               >
-              SP Advertising
+                SP Advertising
                 <ArrowUpRight className="h-3 w-3" />
               </a>
             </span>

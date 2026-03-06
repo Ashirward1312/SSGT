@@ -10,6 +10,7 @@ import Corevalues from './Components/Mission/Corevalues'
 import Contact from './Components/Contact/Contact'
 import Footer from './Components/Footer/Footer'
 import Career from "./Components/Carrer/Carrer";
+import FloatingSocials from "./Components/Floating/Floating";
 
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="/" element={
             <>
               <Hero />
+              <FloatingSocials />
               <About />
               <Mission />
               <Corevalues />

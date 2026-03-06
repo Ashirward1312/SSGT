@@ -1,7 +1,7 @@
 // src/Components/Header/Header.jsx
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Menu, X, Phone } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Phone, LayoutGrid } from "lucide-react"; // ✅ Menu icon replaced
 import { NavLink, Link, useLocation } from "react-router-dom";
 
 import logo from "../Img/logo.png"; // <-- adjust if needed
@@ -14,7 +14,8 @@ const Header = () => {
   // Scroll detection
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -22,6 +23,23 @@ const Header = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
+  // ✅ lock body scroll when menu open (mobile friendly)
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // ✅ close on ESC
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+    if (isOpen) window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
 
   const navItems = [
     { label: "Home", to: "/" },
@@ -37,8 +55,8 @@ const Header = () => {
     }`;
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 m-0 p-0">
-      {/* Background */}
+    <header className="fixed top-0 left-0 w-full z-50 m-0 p-0 relative">
+      {/* Background (✅ click block fix) */}
       <motion.div
         animate={{
           backgroundColor: isScrolled
@@ -47,10 +65,10 @@ const Header = () => {
           borderBottomColor: "rgba(249,115,22,0.2)",
         }}
         transition={{ duration: 0.3 }}
-        className="absolute inset-0 border-b backdrop-blur-xl"
+        className="pointer-events-none absolute inset-0 border-b backdrop-blur-xl z-0"
       />
 
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between h-24">
           {/* LEFT — LOGO */}
           <motion.div whileHover={{ scale: 1.03 }}>
@@ -86,8 +104,8 @@ const Header = () => {
           </nav>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-4">
-            {/* Contact Button (React Router) */}
+          <div className="flex items-center gap-3">
+            {/* Contact Button (Desktop) */}
             <motion.div
               whileHover={{
                 scale: 1.05,
@@ -105,47 +123,84 @@ const Header = () => {
               </NavLink>
             </motion.div>
 
-            {/* Mobile button */}
+            {/* ✅ Mobile toggle button (Menu replaced with LayoutGrid) */}
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden text-white"
+              type="button"
+              onClick={() => setIsOpen((p) => !p)}
+              className="lg:hidden inline-flex items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-white/5 text-white"
+              aria-label="Toggle menu"
+              aria-expanded={isOpen}
             >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
+              {isOpen ? <X size={24} /> : <LayoutGrid size={22} />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* MOBILE MENU */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="lg:hidden bg-neutral-950 border-b border-orange-500/20"
-        >
-          <div className="px-6 py-6 flex flex-col gap-5">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `text-lg ${isActive ? "text-orange-400" : "text-neutral-300 hover:text-orange-400"}`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+      {/* ✅ MOBILE MENU (Overlay + Drawer => better responsive) */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Overlay (tap outside to close) */}
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setIsOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/55 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
 
-            <NavLink
-              to="/contact"
-              className="mt-2 bg-orange-500 text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2"
+            {/* Drawer */}
+            <motion.aside
+              className="lg:hidden fixed top-0 right-0 h-dvh w-[82%] max-w-sm bg-neutral-950 border-l border-orange-500/20 z-50"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.22 }}
             >
-              <Phone size={18} />
-              Contact
-            </NavLink>
-          </div>
-        </motion.div>
-      )}
+              <div className="h-24 px-6 flex items-center justify-between border-b border-orange-500/15">
+                <div className="text-white font-bold">Menu</div>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="w-10 h-10 rounded-xl border border-white/10 bg-white/5 text-white inline-flex items-center justify-center"
+                  aria-label="Close menu"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+
+              <div className="px-6 py-6 flex flex-col gap-4">
+                {navItems.map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `text-lg font-medium ${
+                        isActive
+                          ? "text-orange-400"
+                          : "text-neutral-300 hover:text-orange-400"
+                      }`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+
+                <NavLink
+                  to="/contact"
+                  className="mt-3 bg-orange-500 text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2"
+                >
+                  <Phone size={18} />
+                  Contact
+                </NavLink>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
