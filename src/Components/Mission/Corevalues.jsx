@@ -66,35 +66,42 @@ const CoreValues = () => {
     "Focused product category for deeper technical control",
   ];
 
+  // motion helpers (avoid warnings when reduceMotion = true)
+  const inViewBlock = (amount = 0.25) =>
+    reduceMotion
+      ? { initial: false }
+      : {
+          variants: container,
+          initial: "hidden",
+          whileInView: "show",
+          viewport: { once: true, amount },
+        };
+
+  const inViewItem = reduceMotion ? {} : { variants: item };
+
   return (
-    <main className="bg-gradient-to-b from-neutral-50 via-white to-orange-50/30">
-      <section className="relative overflow-hidden py-14 lg:py-20">
+    <main className="overflow-x-hidden bg-gradient-to-b from-neutral-50 via-white to-orange-50/30">
+      <section className="relative overflow-hidden py-12 sm:py-14 lg:py-20">
         {/* background */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-40 -top-24 h-[560px] w-[560px] rounded-full bg-orange-300/25 blur-[140px]" />
-          <div className="absolute -right-40 -bottom-28 h-[560px] w-[560px] rounded-full bg-amber-200/30 blur-[140px]" />
+          <div className="absolute -left-40 -top-24 h-[520px] w-[520px] rounded-full bg-orange-300/25 blur-[140px]" />
+          <div className="absolute -right-40 -bottom-28 h-[520px] w-[520px] rounded-full bg-amber-200/30 blur-[140px]" />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-16">
+        <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-16">
           {/* header */}
-          <motion.div
-            variants={reduceMotion ? undefined : container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.25 }}
-            className="mx-auto max-w-3xl text-center"
-          >
+          <motion.div {...inViewBlock(0.28)} className="mx-auto max-w-3xl text-center">
             <motion.div
-              variants={reduceMotion ? undefined : item}
-              className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/80 px-5 py-2 text-sm font-semibold text-orange-700 shadow-sm"
+              {...inViewItem}
+              className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/80 px-4 py-2 text-xs sm:text-sm font-semibold text-orange-700 shadow-sm"
             >
               <span className="h-2 w-2 rounded-full bg-orange-500" />
               Our Core Values
             </motion.div>
 
             <motion.h1
-              variants={reduceMotion ? undefined : item}
-              className="text-3xl font-black leading-tight tracking-tight text-neutral-900 md:text-4xl lg:text-5xl"
+              {...inViewItem}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-neutral-900"
             >
               Values that drive{" "}
               <span className="bg-gradient-to-r from-orange-700 via-orange-600 to-amber-600 bg-clip-text text-transparent">
@@ -103,44 +110,48 @@ const CoreValues = () => {
             </motion.h1>
 
             <motion.p
-              variants={reduceMotion ? undefined : item}
-              className="mt-4 text-base leading-relaxed text-neutral-600 md:text-lg"
+              {...inViewItem}
+              className="mt-4 text-sm sm:text-base md:text-lg leading-relaxed text-neutral-600"
             >
-              At SSGT Group, our values are built around disciplined manufacturing, repeatable
-              quality, and long-term partnership with induction furnace steelmakers.
+              At SSGT Group, our values are built around disciplined manufacturing,
+              repeatable quality, and long-term partnership with induction furnace steelmakers.
             </motion.p>
           </motion.div>
 
           {/* values grid */}
           <motion.div
-            variants={reduceMotion ? undefined : container}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            {...(reduceMotion
+              ? { initial: false }
+              : {
+                  variants: container,
+                  initial: "hidden",
+                  whileInView: "show",
+                  viewport: { once: true, amount: 0.2 },
+                })}
+            className="mt-8 sm:mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
             {values.map((v) => {
               const Icon = v.icon;
               return (
                 <motion.div
                   key={v.title}
-                  variants={reduceMotion ? undefined : item}
+                  {...inViewItem}
                   whileHover={
-                    reduceMotion
-                      ? undefined
-                      : { y: -6, transition: { duration: 0.2 } }
+                    reduceMotion ? undefined : { y: -6, transition: { duration: 0.2 } }
                   }
-                  className="rounded-2xl border border-neutral-200 bg-white/90 p-6 shadow-sm backdrop-blur"
+                  className="w-full rounded-2xl border border-neutral-200 bg-white/90 p-5 sm:p-6 shadow-sm backdrop-blur"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="grid h-12 w-12 place-items-center rounded-xl bg-orange-100 text-orange-700 ring-1 ring-orange-200">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="grid h-11 w-11 sm:h-12 sm:w-12 shrink-0 place-items-center rounded-xl bg-orange-100 text-orange-700 ring-1 ring-orange-200">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <div>
-                      <div className="text-base font-extrabold text-neutral-900">
+
+                    {/* ✅ min-w-0 so long text wraps nicely on small screens */}
+                    <div className="min-w-0">
+                      <div className="text-[15px] sm:text-base font-extrabold text-neutral-900">
                         {v.title}
                       </div>
-                      <div className="mt-1.5 text-sm leading-relaxed text-neutral-600">
+                      <div className="mt-1.5 text-[13px] sm:text-sm leading-relaxed text-neutral-600">
                         {v.desc}
                       </div>
                     </div>
@@ -151,52 +162,56 @@ const CoreValues = () => {
           </motion.div>
 
           {/* practices + CTA */}
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+          <div className="mt-8 sm:mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+            {/* practices */}
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 18 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: 0.6 }}
-              className="rounded-2xl border border-neutral-200 bg-white/90 p-6 shadow-sm"
+              className="w-full rounded-2xl border border-neutral-200 bg-white/90 p-5 sm:p-6 shadow-sm"
             >
-              <div className="text-sm font-extrabold uppercase tracking-widest text-orange-700">
+              <div className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-orange-700">
                 How we live these values
               </div>
 
-              <div className="mt-4 grid gap-3">
+              <ul className="mt-4 space-y-3">
                 {practices.map((p) => (
-                  <div key={p} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 text-orange-600" />
-                    <p className="text-sm leading-relaxed text-neutral-700">{p}</p>
-                  </div>
+                  <li key={p} className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-orange-600" />
+                    <p className="min-w-0 text-[13px] sm:text-sm leading-relaxed text-neutral-700">
+                      {p}
+                    </p>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </motion.div>
 
+            {/* CTA */}
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 18 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: 0.6, delay: 0.05 }}
-              className="rounded-2xl border border-orange-200 bg-gradient-to-b from-orange-50 to-white p-6 shadow-sm"
+              className="w-full rounded-2xl border border-orange-200 bg-gradient-to-b from-orange-50 to-white p-5 sm:p-6 shadow-sm"
             >
-              <div className="text-lg font-black text-neutral-900">
+              <div className="text-base sm:text-lg font-black text-neutral-900">
                 Want to work with SSGT Group?
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+              <p className="mt-2 text-[13px] sm:text-sm leading-relaxed text-neutral-600">
                 Let’s discuss your induction furnace requirements and supply expectations.
               </p>
 
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                 <NavLink
                   to="/contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700"
                 >
                   Contact Us <ArrowRight className="h-4 w-4" />
                 </NavLink>
                 <NavLink
                   to="/products"
-                  className="inline-flex items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-50"
+                  className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-50"
                 >
                   View Products
                 </NavLink>

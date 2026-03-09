@@ -54,7 +54,13 @@ const SmartImg = ({ src, alt, priority = false, className = "" }) => {
 };
 
 /* ── Counter (formatted numbers) ── */
-const Counter = ({ end, decimals = 0, suffix = "", duration = 1.4 }) => {
+const Counter = ({
+  end,
+  decimals = 0,
+  suffix = "",
+  duration = 1.4,
+  useGrouping = true, // ✅ NEW: control comma grouping
+}) => {
   const reduceMotion = useReducedMotion();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
@@ -86,10 +92,11 @@ const Counter = ({ end, decimals = 0, suffix = "", duration = 1.4 }) => {
 
   const num = decimals > 0 ? Number(val.toFixed(decimals)) : Math.round(val);
 
-  // ✅ full numbers with commas
+  // ✅ full numbers with commas (optional)
   const display = new Intl.NumberFormat("en-IN", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
+    useGrouping, // ✅ NEW: for year 2006, set false
   }).format(num);
 
   return (
@@ -132,6 +139,7 @@ const Manufacturing = ({ withHeaderOffset = true }) => {
       icon: Building2,
       accent: "from-orange-600 to-amber-600",
       iconBox: "bg-orange-50 ring-orange-200 text-orange-700",
+      useGrouping: false, // ✅ FIX: no comma for year (2006)
     },
     {
       end: 3,
@@ -324,9 +332,8 @@ const Manufacturing = ({ withHeaderOffset = true }) => {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-16">
-        {/* ✅ FIX: You were missing the opening motion.div here */}
+        {/* HERO */}
         <motion.div {...up(0)} className="mx-auto max-w-3xl text-center">
-          {/* HERO */}
           <motion.h1
             {...up(0.08)}
             className="mx-auto mt-7 max-w-5xl text-neutral-900 font-black tracking-tight leading-[1.05]
@@ -413,6 +420,7 @@ const Manufacturing = ({ withHeaderOffset = true }) => {
                       decimals={s.decimals ?? 0}
                       suffix={s.suffix ?? ""}
                       duration={1.4}
+                      useGrouping={s.useGrouping ?? true} // ✅ FIX applied
                     />
                   </div>
 
@@ -566,7 +574,9 @@ const Manufacturing = ({ withHeaderOffset = true }) => {
                   }
                   className="relative overflow-hidden rounded-3xl border border-neutral-200 bg-white p-7 shadow-xl shadow-neutral-200/40"
                 >
-                  <div className={`h-1.5 w-full rounded-full bg-gradient-to-r ${q.grad}`} />
+                  <div
+                    className={`h-1.5 w-full rounded-full bg-gradient-to-r ${q.grad}`}
+                  />
                   <div className="mt-6">
                     <div
                       className={`inline-flex items-center justify-center rounded-2xl border ${q.border} ${q.light} p-3`}

@@ -8,7 +8,7 @@ const Product = ({ withHeaderOffset = true }) => {
     {
       id: 1,
       name: "SRM-Premix (Boron Oxide)",
-      badge: "Premium • Main Product",
+      // badge: "Premium • Main Product",
       isMain: true,
       description:
         "A premium silica ramming mass manufactured using high-purity quartzite aggregates and a controlled boron oxide premix bonding system.",
@@ -27,7 +27,7 @@ const Product = ({ withHeaderOffset = true }) => {
     {
       id: 2,
       name: "SRM-Premix (Boric Acid)",
-      badge: "Standard Grade",
+      // badge: "Standard Grade",
       isMain: false,
       description:
         "A standard-grade silica ramming mass using selected quartzite aggregates and boric acid premix bonding system.",
@@ -46,7 +46,7 @@ const Product = ({ withHeaderOffset = true }) => {
     {
       id: 3,
       name: "SRM-LITE",
-      badge: "Economy Grade",
+      // badge: "Economy Grade",
       isMain: false,
       description:
         "An economy-grade silica ramming mass supplied without any premixed bonding agent.",
@@ -135,12 +135,12 @@ const Product = ({ withHeaderOffset = true }) => {
                   />
 
                   <div className="absolute top-6 right-6 z-20">
-                    <span
+                    {/* <span
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${product.gradient} text-white font-bold text-sm`}
                     >
                       <Zap className="w-4 h-4" />
                       {product.badge}
-                    </span>
+                    </span> */}
                   </div>
 
                   <div className="grid md:grid-cols-3 gap-8 p-8 md:p-12 relative z-10">
@@ -196,9 +196,9 @@ const Product = ({ withHeaderOffset = true }) => {
           viewport={{ once: true }}
           className="max-w-7xl mx-auto px-6 lg:px-12"
         >
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">
+          {/* <h2 className="text-3xl font-bold text-white mb-8 text-center">
             Additional Solutions
-          </h2>
+          </h2> */}
 
           <div className="grid md:grid-cols-2 gap-8">
             {products.map(
@@ -220,11 +220,11 @@ const Product = ({ withHeaderOffset = true }) => {
                         >
                           <product.icon className="w-7 h-7 text-white" />
                         </div>
-                        <span
+                        {/* <span
                           className={`text-xs font-bold px-3 py-1 rounded-full bg-gradient-to-r ${product.gradient} text-white`}
                         >
                           {product.badge}
-                        </span>
+                        </span> */}
                       </div>
 
                       <h3
